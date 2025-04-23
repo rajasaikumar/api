@@ -11,12 +11,11 @@ import re
 
 app = FastAPI()
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5500", "http://127.0.0.1:5500", "http://localhost:8000", "http://127.0.0.1:8000"  , "http://localhost:3000",
-        "http://127.0.0.1:3000",],
-    # allow_origins=["*"],
+        "http://127.0.0.1:3000","https://your-cloudflare-page.pages.dev"],
+    
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,7 +25,7 @@ templates = Jinja2Templates(directory="templates")
 
 employee_counter = 1
 
-# Pydantic model for employee
+
 class Employee(BaseModel):
     first_name: str 
     last_name: str 
@@ -59,7 +58,6 @@ class Employee(BaseModel):
         return self
 
 
-# Hardcoded employee list
 employee_list: List[Employee] = []
 
 @app.get("/db")
@@ -76,15 +74,7 @@ async def get_employee_list(request: Request):
 async def get_form(request: Request):
     return templates.TemplateResponse("form.html", {"request": request})
 
-# # Sample in-memory employee list
-# employees_db = [
-#     {"first_name": "John", "last_name": "Doe", "email": "john@example.com"},
-#     {"first_name": "Jane", "last_name": "Smith", "email": "jane@example.com"},
-# ]
-# @app.get("/employees", response_model=List[Employee])
-# async def get_employees():
-#     return employee_list
-# 
+
 
 
 
@@ -93,7 +83,6 @@ async def get_employees():
     return employee_list
 
 
-# Post method for adding new employee
 @app.post("/employees")
 async def add_employee(employee: Employee):
     print(employee)
